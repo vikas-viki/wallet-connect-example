@@ -2,6 +2,9 @@
 
 **`Give a 🌟 if it was helpful.`**
 
+Go to this playlist and see the code explanation
+**[here](https://www.youtube.com/@webdevsolutions/playlists).**
+
 `Using walletconnect with wagmi`
 
 ### Getting started
@@ -23,9 +26,6 @@ npm start
 ```
 
 ### How it works ?
-
-Go to this playlist and see the code explanation
-**[here](https://www.youtube.com/@webdevsolutions/playlists).**
 
 
 **` Part 1 `**
