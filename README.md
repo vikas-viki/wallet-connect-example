@@ -28,7 +28,7 @@ Go to this playlist and see the code explanation
 
 **` Part 1 `**
 
-In part 1 we just made wallet connect integration where user can connect their wallet with provider which the use.
+In part 1 we just made wallet connect integration where user can connect their wallet with provider which they use.
 
 ``` javascript
 import { Web3Button, Web3Modal } from "@web3modal/react";
@@ -151,7 +151,7 @@ import { publicProvider } from 'wagmi/providers/public'
 const queryClient = new QueryClient();
 
 const chains = [sepolia];
-const projectId = "753ca87e729b296cfedf813f7eef158b";
+const projectId = "YOUR_PROJECT_ID_HERE";
 
 const { publicClient, webSocketPublicClient } = configureChains(chains, [
   w3mProvider({ projectId }),
