@@ -1,11 +1,10 @@
-# Wallet connect example
+# Wallet connect example with wagmi
 
 **`Give a 🌟 if it was helpful.`**
 
-Go to this playlist and see the code explanation
+Go to this playlist and for code explanation
 **[here](https://www.youtube.com/@webdevsolutions/playlists).**
 
-`Using walletconnect with wagmi`
 
 ### Getting started
 
