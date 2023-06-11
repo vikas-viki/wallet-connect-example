@@ -12,7 +12,7 @@ import { publicProvider } from 'wagmi/providers/public'
 const queryClient = new QueryClient();
 
 const chains = [sepolia];
-const projectId = "753ca87e729b296cfedf813f7eef158b";
+export const projectId = "753ca87e729b296cfedf813f7eef158b";
 
 const { publicClient, webSocketPublicClient } = configureChains(chains, [
   w3mProvider({ projectId }),
