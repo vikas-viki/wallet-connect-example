@@ -1,34 +1,17 @@
 import { Web3Button, Web3Modal } from "@web3modal/react";
-import {
-  EthereumClient,
-  w3mConnectors,
-  w3mProvider,
-} from "@web3modal/ethereum";
-import { configureChains, createConfig, WagmiConfig } from "wagmi";
-import { sepolia } from "wagmi/chains";
+import { EthereumClient } from "@web3modal/ethereum";
+import { sepolia } from "wagmi";
+import { wagmiConfig } from "../index";
 
 export default function Part1() {
-
   const chains = [sepolia];
-  const projectId = "YOUR_PROJECT_ID_HERE";
-
-  const { publicClient } = configureChains(chains, [
-    w3mProvider({ projectId }),
-  ]);
-
-  const wagmiConfig = createConfig({
-    autoConnect: true,
-    connectors: w3mConnectors({ projectId, version: 1, chains }),
-    publicClient,
-  });
+  const projectId = "753ca87e729b296cfedf813f7eef158b";
 
   const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
   return (
     <>
-      <WagmiConfig config={wagmiConfig}>
-        <Web3Button />
-      </WagmiConfig>
+      <Web3Button />
 
       <Web3Modal
         projectId={projectId}
