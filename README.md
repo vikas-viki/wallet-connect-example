@@ -1,5 +1,7 @@
 # Wallet connect example
 
+**`Give a 🌟 if it was helpful.`**
+
 `Using walletconnect with wagmi`
 
 ### Getting started
