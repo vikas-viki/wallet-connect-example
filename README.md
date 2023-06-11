@@ -1,70 +1,181 @@
-# Getting Started with Create React App
+# Wallet connect example
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+`Using walletconnect with wagmi`
 
-## Available Scripts
+### Getting started
 
-In the project directory, you can run:
+- First clone the respository
+```
+git clone https://github.com/vikas-viki/wallet-connect-example
+```
 
-### `npm start`
+- Install packages
+```
+npm i
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Run the app
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+npm start
+```
 
-### `npm test`
+### How it works ?
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Go to this playlist and see the code explanation
+**[here](https://www.youtube.com/@webdevsolutions/playlists).**
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**` Part 1 `**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+In part 1 we just made wallet connect integration where user can connect their wallet with provider which the use.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+``` javascript
+import { Web3Button, Web3Modal } from "@web3modal/react";
+import {
+  EthereumClient,
+  w3mConnectors,
+  w3mProvider,
+} from "@web3modal/ethereum";
+import { configureChains, createConfig, WagmiConfig } from "wagmi";
+import { sepolia } from "wagmi/chains";
 
-### `npm run eject`
+export default function Part1() {
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  const chains = [sepolia];
+  const projectId = "YOUR_PROJECT_ID_HERE";
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  const { publicClient } = configureChains(chains, [
+    w3mProvider({ projectId }),
+  ]);
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+  const wagmiConfig = createConfig({
+    autoConnect: true,
+    connectors: w3mConnectors({ projectId, version: 1, chains }),
+    publicClient,
+  });
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+  const ethereumClient = new EthereumClient(wagmiConfig, chains);
 
-## Learn More
+  return (
+    <>
+      <WagmiConfig config={wagmiConfig}>
+        <Web3Button />
+      </WagmiConfig>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+      <Web3Modal
+        projectId={projectId}
+        ethereumClient={ethereumClient}
+        defaultChain={sepolia}
+      />
+    </>
+  );
+}
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+**`Part2`**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+In part 2, the code changes where we used hooks to get details of connected account and initiated a transaction and we moved the whole config to main `index.js` file.
 
-### Analyzing the Bundle Size
+``` javascript
+// Part2.jsx
+import React, { useEffect, useState } from "react";
+import { parseEther } from "viem";
+import { useAccount } from "wagmi";
+import { useSendTransaction, usePrepareSendTransaction } from "wagmi";
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+const Part2 = () => {
+  const [address, setAddress] = useState("");
+  const [connector, setConnector] = useState({});
+  const [txhash, setTxhash] = useState("");
 
-### Making a Progressive Web App
+  
+  const data1 = useAccount({
+    onConnect({ address, connector, isReconnected }) {
+      setAddress(address);
+      setConnector(connector);
+    },
+    onDisconnect() {
+      setAddress("");
+      setConnector({});
+    },
+  });
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  const { config } = usePrepareSendTransaction({
+    to: "0xe6d2212bAe4497902d8679294ccE974d8db8E53C",
+    value: parseEther("0.01"),
+  });
 
-### Advanced Configuration
+  const { data, isLoading, isSuccess, sendTransaction } =
+    useSendTransaction(config);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+  useEffect(() => {
+    setTxhash(data?.hash);
+  }, [data, isLoading, isSuccess]);
 
-### Deployment
+  return (
+    <div>
+      <span>Address: {address}</span> <br />
+      <span>Connected through: {connector?.name}</span><br />
+      <button
+        onClick={async () => {
+          sendTransaction?.();
+        }}
+      >
+        Send Txn
+      </button><br />
+      <span>Txn hash: {txhash}</span>
+    </div>
+  );
+};
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+export default Part2;
 
-### `npm run build` fails to minify
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+``` javascript
+// index.js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { createConfig, configureChains, WagmiConfig } from 'wagmi';
+import { w3mConnectors, w3mProvider } from '@web3modal/ethereum';
+import { sepolia } from "wagmi/chains";
+import { publicProvider } from 'wagmi/providers/public'
+
+
+const queryClient = new QueryClient();
+
+const chains = [sepolia];
+const projectId = "753ca87e729b296cfedf813f7eef158b";
+
+const { publicClient, webSocketPublicClient } = configureChains(chains, [
+  w3mProvider({ projectId }),
+  publicProvider()
+]);
+
+export const wagmiConfig = createConfig({
+  publicClient,
+  webSocketPublicClient,
+  autoConnect: true,
+  connectors: w3mConnectors({ projectId, version: 1, chains })
+});
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <QueryClientProvider client={queryClient} contextSharing={true}>
+    <WagmiConfig config={wagmiConfig} >
+      <App />
+    </WagmiConfig>
+  </QueryClientProvider>
+
+
+);
+
+```
+
