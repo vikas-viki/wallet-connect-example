@@ -5,13 +5,13 @@ import App from './App';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { createConfig, configureChains, WagmiConfig } from 'wagmi';
 import { w3mConnectors, w3mProvider } from '@web3modal/ethereum';
-import { sepolia } from "wagmi/chains";
+import { mainnet } from "wagmi/chains";
 import { publicProvider } from 'wagmi/providers/public'
 
 
 const queryClient = new QueryClient();
 
-const chains = [sepolia];
+const chains = [mainnet];
 export const projectId = "753ca87e729b296cfedf813f7eef158b";
 
 const { publicClient, webSocketPublicClient } = configureChains(chains, [
